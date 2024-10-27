@@ -57,6 +57,8 @@ const adminRegister = async (req, res) => {
 const adminLogin = async (req, res) => {
     try {
         const { adminEmail, password } = req.body;
+        console.log(req.body);
+        
 
         // Validate input fields
         if (!adminEmail || !password) {

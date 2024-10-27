@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../model/userModel.js";
+import User from "../models/adminModel.js";
 
 import * as dotenv from "dotenv";
 
@@ -7,6 +7,7 @@ dotenv.config();
 
 const protect = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1]; // Use optional chaining to handle potential undefined headers
+console.log(token,"token");
 
   const JWT_SECRET = process.env.JWT_SECRET; // Assuming JWT_SECRET is a string in your .env file
 

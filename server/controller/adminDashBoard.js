@@ -24,43 +24,39 @@ const userScoreUpdate = async (req, res) => {
 };
 
 const allUserScore = async (req, res) => {
-    const { page = 1, limit = 10, search = "", status } = req.query;
-
-
+    const { page = 1, limit = 10, search = "" } = req.query;
 
     try {
         const query = {
-            isDelete: false,
+          
             $or: [
                 { name: { $regex: search, $options: "i" } },
                 { content: { $regex: search, $options: "i" } }
             ]
         };
 
-
-
-        const totalPosts = await postModel.countDocuments(query);
+        // Total number of posts matching the query
+        const totalPosts = await userModel.countDocuments(query);
         const totalPages = Math.ceil(totalPosts / limit);
-        const posts = await postModel.find(query)
-            .populate({ path: 'userId', select: '-password' })
-            .skip((page - 1) * limit)
-            .limit(Number(limit));
+        const posts = await userModel.find(query).sort({score:-1})
+            .skip((Number(page) - 1) * Number(limit))
+            .limit(Number(limit))
 
         res.status(200).json({
             data: posts,
-            currentPage: page,
+            currentPage: Number(page),
             totalPages: totalPages,
             totalPosts: totalPosts,
             message: "Posts fetched successfully",
             error: false
         });
     } catch (error) {
-        console.log(error);
+        console.error("Error fetching posts:", error);
         res.status(500).json({
             message: "Internal server error",
             error: true
         });
     }
-}
+};
 
 export { allUserScore, userScoreUpdate }
